@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mines-vs-Treasure</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <h1>Welcome to "Mines-vs-Treasure"</h1>
+    <div id="player-info">
+        <label for="player-name">Your Name:</label>
+        <input type="text" id="player-name" placeholder="Enter your name here">
+        <label for="level">Choose Difficulty:</label>
+        <select id="level">
+            <option value="easy">Easy (10 Mines)</option>
+            <option value="hard">Hard (20 Mines)</option>
+        </select>
+        <div id="board"></div>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <script>
+        function startGame() {
+            const playerName = document.getElementById('player-name').value;
+            const level = document.getElementById('level').value;
+
+            if (!playerName) {
+                alert('Please enter your name first!');
+                return;
+            }
+
+            // Store player name and level for the game
+            localStorage.setItem('playerName', playerName);
+            localStorage.setItem('level', level);
+
+            window.location.href = 'game.html';  
+        }
+    </script>
+</body>
+</html>

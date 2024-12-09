@@ -1,0 +1,45 @@
+
+/* Basic styling for the page */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+}
+
+h1, h2 {
+    color: #ffcbcb;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(8, 50px);
+    grid-gap: 5px;
+    margin: 20px auto;
+    max-width: 450px;
+    color: #c0a1a1;
+}
+
+button {
+    width: 50px;
+    height: 50px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+#flag-button {
+    font-size: 30px;
+}
+
+button:disabled {
+    background-color: #acdbff;
+}
+
+#player-info, #game-screen {
+    margin: 20px;
+}
+
+#game-message {
+    font-size: 18px;
+    color: rgb(180, 197, 195);
+}
