@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mines-vs-Treasure</title>
+    <style>
+        body {
+            background-color: #F1F0E8;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #B3C8CF;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-gap: 5px;
+            margin: 20px auto;
+            max-width: 450px;
+        }
+
+        button {
+            width: 50px;
+            height: 50px;
+            font-size: 12px;
+            cursor: pointer;
+            background-color: #B3C8CF;
+            border: none;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #E5E1DA;
+        }
+
+        button:disabled {
+            background-color: #89A8B2;
+        }
+
+        #player-info, #game-screen {
+            margin: 20px;
+        }
+
+        #game-message {
+            font-size: 22px;
+            color: #B1C29E;
+        
+         audio {
+            display: none;
+        } 
+    }
+    </style>
+</head>
+<body>
+    <div id="player-info">
+        <h1>Welcome to "Mines-vs-Treasure"</h1>
+        <label for="player-name">Your Name:</label>
+        <input type="text" id="player-name" placeholder="Enter your name here">
+        <label for="level">Choose Difficulty:</label>
+        <select id="level">
+            <option value="easy">Easy (10 Mines)</option>
+            <option value="hard">Hard (20 Mines)</option>
+        </select>
+        <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <div id="game-screen" style="display: none;">
+        <h2>Welcome, <span id="player-display"></span>!</h2>
+        <p>Remaining Attempts: <span id="attempts-left">10</span></p>
+        <p>Time Remaining: <span id="timer">20:00</span></p>
+        <div id="board"></div>
+        <p id="game-message"></p>
+        <button onclick="resetGame()">Restart Game</button>
+        <audio id="background-sound">
+            <source src="background.wav" type="audio/wav" loop autoplay>
+        </audio>
+        <audio id="click-sound">
+            <source src="click.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="win-sound">
+            <source src="win.wav" type="audio/wav">
+        </audio>
+        <audio id="lose-sound">
+            <source src="lose.wav" type="audio/wav">
+        </audio>
+        <audio id="warning-sound">
+            <source src="warning.wav" type="audio/wav">
+        </audio>
+    </div>
+
+    <script>
+        let board = [];
+        let rows = 8;
+        let columns = 8;
+
+        let minesCount = 10;
+        let minesLocation = [];
+        let treasure = -1;
+        let attempts = 10;
+        let tilesClicked = 0;
+        let flagEnabled = false;
+        let gameOver = false;
+
+        let timer;
+        let timeRemaining = 1200;
+
+        window.onload = function () {
+            document.getElementById('background-sound').play();
+        };
+        function startGame() {
+            
+            const playerName = document.getElementById('player-name').value;
+            const level = document.getElementById('level').value;
+
+            if (!playerName) {
+                alert('Please enter your name first!');
+                return;
+            }
+
+            document.getElementById('player-display').textContent = playerName;
+             minesCount = (level === 'hard') ? 20 : 10;
+            attempts = 10;
+
+            document.getElementById('player-info').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+
+            setMines();
+            setTreasure();
+            renderBoard();
+            startTimer();
+            
+            document.getElementById('background-sound').play();
+        
+        }
+
+        function startTimer() {
+            timer = setInterval(function() {
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    document.getElementById('game-message').textContent = "Time's Up! Game Over!";
+                    gameOver = true;
+                    revealMines();
+                    document.getElementById('lose-sound').play();
+                } else {
+                    timeRemaining--;
+                    let minutes = Math.floor(timeRemaining / 60);
+                    let seconds = timeRemaining % 60;
+                    document.getElementById('timer').textContent = {minutes};{seconds < 10 ? '0' : ''}{seconds};
+                }
+            }, 1000);
+        }
+
+        function setMines() {
+            let minesLeft = minesCount;
+            while (minesLeft > 0) {
+                let r = Math.floor(Math.random() * rows);
+                let c = Math.floor(Math.random() * columns);
+                let id = r.toString() + "-" + c.toString();
+
+                if (!minesLocation.includes(id) && id !== treasure) {
+                    minesLocation.push(id);
+                    minesLeft--;
+                }
+            }
+        }
+
+        function setTreasure() {
+            let r = Math.floor(Math.random() * rows);
+            let c = Math.floor(Math.random() * columns);
+            treasure = r.toString() + "-" + c.toString();
+        }
+
+        function renderBoard() {
+            const boardDiv = document.getElementById('board');
+            boardDiv.innerHTML = '';
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < columns; c++) {
+                    let tile = document.createElement('button');
+                    tile.id = r.toString() + "-" + c.toString();
+                    tile.addEventListener('click', clickTile);
+                    boardDiv.appendChild(tile);
+                }
+            }
+        }
+
+        function clickTile() {
+            if (gameOver || this.classList.contains('tile-clicked')) return;
+
+            let tile = this;
+            document.getElementById('click-sound').play();
+
+            if (flagEnabled) {
+                toggleFlag(tile);
+                return;
+            }
+
+            if (minesLocation.includes(tile.id)) {
+                tile.innerText = "💣";
+                gameOver = true;
+                revealMines();
+                document.getElementById('lose-sound').play();
+                document.getElementById('game-message').textContent = "Game Over! You hit a mine!";
+            } else if (tile.id === treasure) {
+                tile.innerText = "🏆";
+                document.getElementById('win-sound').play();
+                document.getElementById('game-message').textContent = "You Win!";
+                gameOver = true;
+            } else {
+                tile.innerText = "";
+                tile.classList.add('tile-clicked');
+                tilesClicked++;
+
+                if (tilesClicked === rows * columns - minesCount) {
+                    document.getElementById('game-message').textContent = "Congrats! You cleared the grid!";
+                    gameOver = true;
+                }
+            }
+        }
+
+        function toggleFlag(tile) {
+            if (tile.innerText === "") {
+                tile.innerText = "🚩";
+            } else if (tile.innerText === "🚩") {
+                tile.innerText = "";
+            }
+        }
+
+        function revealMines() {
+            for (let i = 0; i < minesLocation.length; i++) {
+                let mineTile = document.getElementById(minesLocation[i]);
+                mineTile.innerText = "💣";
+                mineTile.style.backgroundColor = "#E5E1DA";
+            }
+        }
+
+        function resetGame() {
+            window.location.reload();
+        }
+        const audioElemint = document.querySelectorAll('audio');
+        audioElemint.forEach(audio => {
+            audio.style.display = 'none'; // this code hides all audio
+        }
+
+        )
+    </script>
+</body>
+</html>
