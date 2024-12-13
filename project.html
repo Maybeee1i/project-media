@@ -210,7 +210,7 @@
                 document.getElementById('lose-sound').play();
                 document.getElementById('game-message').textContent = "Game Over! You hit a mine!";
             } else if (tile.id === treasure) {
-                tile.innerText = "🏆";
+                tile.innerText = "💎";
                 document.getElementById('win-sound').play();
                 document.getElementById('game-message').textContent = "You Win!";
                 gameOver = true;
