@@ -1,17 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mines-vs-Treasure</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
-</head>
-<body>
-    <h2>Welcome, <span id="player-display"></span>!</h2>
-    <p>Remaining Attempts: <span id="attempts-left">10</span></p>
-    <div id="board"></div>
-    <p id="game-message"></p>
-    <button onclick="resetGame()">Restart Game</button>
-</body>
-</html>
+/* إعدادات الجسم (Body) */
+body {
+    margin: 0; /* عدم وجود مسافة حول الجسم */
+    padding: 0; /* عدم وجود مسافة داخل الجسم */
+    border: 2px solid rgb(106, 55, 14); /* حدود بسماكة 2 بكسل ولون بني غامق */
+    background-size: 100% 100%; /* تغطي الخلفية الجسم بالكامل */
+    background-position: center; /* الصورة الخلفية في المنتصف */
+    animation: bganimation 15s infinite; /* انيميشن يستمر لمدة 15 ثانية بشكل متكرر */
+}
+
+/* إعدادات العنصر .contact */
+.contact {
+    position: absolute; /* موقع مطلق */
+    top: 90%; /* من الأعلى */
+    left: 20%; /* من اليسار */
+    transform: translate(-50%, -50%); /* تحريك للوسط */
+}
+
+/* إعدادات الزر */
+.button {
+    position: absolute; /* موقع مطلق */
+    top: 75%; /* من الأعلى */
+    left: 50%; /* من اليسار */
+    transform: translate(-50%, -50%); /* تحريك للوسط */
+}
+
+/* تنسيق الزر (Button Styles) */
+.btn {
+    border: 3px solid; /* حدود للزر */
+    padding: 5px 20px; /* فراغ داخل الزر */
+    color: whitesmoke; /* لون النص */
+    transition: 0.5s ease; /* تأثير الانتقال */
+    font-size: 30px; /* حجم النص */
+}
+
+/* إعدادات النموذج (Form Styles) */
+form {
+    background-color: rgba(137, 126, 126, 0.372); /* لون خلفية مع شفافية */
+    padding: 30px; /* فراغ داخل النموذج */
+    width: 80%; /* عرض النموذج 80% */
+    color: white; /* لون النص داخل النموذج */
+}
+
+/* إعدادات النص (Text Section) */
+.text-section {
+    flex: 1; /* يأخذ المساحة المتبقية */
+    text-align: left; /* محاذاة النص إلى اليسار */
+}
+
+/* تنسيق العنوان (Heading Styles) */
+.text-section h1 {
+    font-size: 2rem; /* حجم الخط */
+    color: #704a2d; /* لون النص */
+    margin-bottom: 20px; /* فراغ تحت العنوان */
+}
+
+/* إعدادات الأزرار في قسم النص */
+.text-section button {
+    padding: 10px 25px; /* فراغ داخل الزر */
+    font-size: 1rem; /* حجم الخط */
+    color: #704a2d; /* لون النص */
+    border: 1px solid #704a2d; /* حدود للزر */
+    background-color: transparent; /* خلفية شفافة */
+    border-radius: 20px; /* زوايا دائرية */
+    cursor: pointer; /* شكل المؤشر */
+    transition: 0.3s; /* تأثير الانتقال */
+}
+
+/* إعدادات قسم الصور */
+.images-section img {
+    width: 100%; /* عرض الصورة 100% */
+    border-radius: 10px; /* زوايا دائرية */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* تأثيرات التحويل والظل */
+}
+
+/* تأثيرات الصور عند التمرير */
+.images-section img:hover {
+    transform: scale(1.05); /* تكبير الصورة عند المرور فوقها */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* ظل للصورة */
+}
