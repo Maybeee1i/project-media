@@ -111,6 +111,28 @@
 
         let timer;
         let timeRemaining = 1200;
+        
+        // Array of random win and lose messages
+const winMessages = [
+"Congratulations! You found the treasure!",
+"Well done! You discovered the hidden treasure!",
+"Bravo! The treasure is yours!",
+"You won! The treasure is in your hands!"
+];
+const loseMessages = [
+"You're strong! Try again!"
+"Things didn't go as planned, but you can try again!",
+"The treasure was somewhere else, but you're close!"
+"You lost this time, but next time will be better!"
+];
+
+        
+        // Function to get a random message
+        function getRandomMessage(messages) {
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            return messages[randomIndex];
+        }
+        
 
         window.onload = function () {
             document.getElementById('background-sound').play();
